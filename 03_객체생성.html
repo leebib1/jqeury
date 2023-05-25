@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>객체 생성</title>
+    <script src="./js/jquery-3.7.0.min.js"></script>
+</head>
+<body>
+    <h1>jqeury를 이용해서 태그를 생성</h1>
+    <p>
+        $("생성할 태그")<br>
+        ex) $("&lt;button&gt;");
+        html() 함수 이용. : innerHTML에 값을 대입한 것과 동일
+    </p>
+    <button onclick="createTag();">태그 생성</button>
+    <div id="container"></div>
+    <script>
+        const createTag=()=>{
+            // $("div#container").html("<p>생성된 p태그</p>");
+            // $("div#container").html("<p>생성된 p태그1</p>"); //덮어쓰기됨
+            const $h3=$("<h3>");
+            console.log($h3);
+            // $h3.text("jquery 방식으로 생성").css("color","olive");
+            // $("div#container").append($h3); //+=처럼 계속 추가되지만 위에 html을 사용하면 덮어쓰기 되므로 그 전에 추가한게 사라진다.
+            $("<h3>생성된 태그</h3>").css("color","olive").appendTo($("div#container"));
+        };
+    </script>
+
+    <div id="inputTag">
+        <input type="text" name="tag">
+        <input type="text" name="content">
+        <button onclick="createTag2();">태그 생성</button>
+    </div>
+    <script>
+        const createTag2=()=>{
+            // const tag=$("input[name=tag]")[0].value;
+            const tag=$("input[name=tag]").val(); //input의 value를 불러오는 함수 input이 다중인 경우 each로 하나씩 접근해야함.
+            // console.log(tag[0].value);
+            const content=$("#inputTag>input:last")[0].value;
+            const $div=$("#container");
+            // $("<"+tag+">"+content+"</"+tag+">").appendTo($div);
+            $(`<${tag}>`).text(content).appendTo($("#container"));
+        };
+    </script>
+
+    <h3>생성된 태그를 페이지에 연결해주는 함수</h3>
+    <ul>
+        <li>자식태그로 연결
+            <p>append(),appendTo() : 맨밑에 자식으로 추가하는 함수</p>
+            <p>prepend(),prependTo() : 맨위에 자식으로 추가하는 함수</p>
+        </li>
+        <li>형제태그로 연결
+            <p>before(),insertBefore() : 같은 레벨에서 지정된 태그의 앞에 추가하는 함수</p>
+            <p>after(),inserAfter() : 같은 레벨에서 지정된 태그의 뒤에 추가하는 함수</p>
+        </li>
+    </ul>
+    <div id="container2">
+        <h2 style="color:orange">기준 태그</h2>
+    </div>
+    <button onclick="appendTest();">appendTest</button>
+    <button onclick="prependTest();">prependTest</button>
+    <button onclick="beforeTest();">beforeTest</button>
+    <button onclick="afterTest();">afterTest</button>
+    <style>
+        #container2{
+            width: 400px;
+            height: 300px;
+            border: 1px solid red;
+        }
+    </style>
+    <script>
+        const afterTest=()=>{
+            const $p=$("<p>").text("after Test");
+            $("#container2").after($p);
+            const $input=$("<input>");
+            $input.insertAfter("#container2");
+        }
+        const beforeTest=()=>{
+            const $h4=$("<h4>").text("before Test");
+            $("#container2").before($h4);
+            const $hr=$("<hr>")
+            $hr.insertBefore("#container2");
+        };
+        const prependTest=()=>{
+            const $p=$("<p>").text("prepend Test");
+            $("#container2").prepend($p);
+            const $p1=$("<p>").text("prependTo Test");
+            $p1.prependTo($("#container2"));
+        };
+        const appendTest=()=>{
+            const $h3=$("<h3>").text("점심 시간 즐겼나요?");
+            // 접근한 Element에 매개변수 Element를 자식으로 추가
+            $("#container2").append($h3);
+            // 접근한 Element를 매개변수 Element에 자식으로 추가
+            const $h4=$("<h4>").text("appendTo Test");
+            $($h4).appendTo("#container2");
+        };
+    </script>
+
+    <h3>페이지에 출력된 태그를 append,prepend,after,before를 사용</h3>
+    <p>
+        위치를 이동시킬 수 있다.
+    </p>
+    <div id="container3">
+        <p>나는 p 태그</p>
+        <h4>나는 h4태그</h4>
+    </div>
+    <button onclick="moveTag();">움직이기</button>
+    <script>
+        const moveTag=()=>{
+            $("#container3>*:first").appendTo($("#container3"));
+
+        }
+    </script>
+    <!-- div#imgcontainer 안에 이미지 세개를 출력하는 기능
+        추가 버튼을 누르면 이미지 추가
+        변경 버튼을 누르면 이미지가 돌아가게 함 -->
+    <div id="imgcontainer"></div>
+    <button onclick="addImg();">이미지 추가</button>
+    <button onclick="changeImg();">이미지 변경</button>
+    <script>
+        const addImg=(()=>{
+            let count=0;
+            const srcs=["./images/치이카와.png","./images/하치와레.jpg","./images/하치와레1.png"];
+            return e=>{
+                if(count<3){
+                    const img=$("<img>").css("width","200px").css("height","200px");
+                    img[0].src=srcs[count++];
+                    $("#imgcontainer").append(img);
+                }else{
+                    alert("이미지 추가는 3개까지 가능합니다.");
+                }
+            } 
+        })();
+        const changeImg=()=>{
+            $("#imgcontainer>*:first").appendTo("div#imgcontainer");
+        };
+    </script>
+
+    <h2>태그를 삭제, 복사</h2>
+    <p>
+        $("선택자").clone(boolean) 메소드를 이용해서 태그를 복사한다.<br>
+        true : event까지 복사<br>
+        false : 태그만 복사. 생략시 false가 기본값
+    </p>
+    <div id="clone-div">
+        <div id="item1" class="item">
+            <span>안녕</span>
+        </div>
+    </div>
+    <button onclick="cloneTest();">복사하기</button>
+    <style>
+        .item{
+            width: 100px;
+            height: 100px;
+            display: inline-block;
+            text-align: center;
+            background-color:yellowgreen;
+        }
+        .item>span{
+            font-size: 24px;
+            font-weight: bolder;
+            color: beige;
+        }
+    </style>
+    <script>
+        const cloneTest=()=>{
+            const $div=$("#item1").clone(true);
+            console.log($div);
+            $div.appendTo("#clone-div");
+        };
+        $(()=>{
+            $("#item1").click(e=>{
+                $(e.target).css("backgroundColor","olive");
+            });
+        });
+    </script>
+
+    <h3>삭제</h3>
+    <p>
+        $("부모태그").empty() : 모든 자식태그를 삭제하는 함수<br>
+        $("지울태그").remove() : 해당 태그를 삭제하고 태그를 반환하는 함수 *단, 설정된 이벤트는 삭제한다.<br>
+        $("지울태그").detach() : 해당 태그를 삭제하고 태그를 반환하는 함수 * 이벤트를 유지함
+    </p>
+    <div id="remove-test" class="box">
+        <div id="item2" class="item">
+            <span>삭제하기</span>
+        </div>
+    </div>
+    <div id="result" class="box"></div>
+    <button onclick="deleteTest();">삭제하기</button>
+    <style>
+        .box{
+            width: 100px;
+            height: 100px;
+            padding: 5px 10px 15px 10px;
+            margin: 10px;
+        }
+        #remove-test{
+            border: 1px solid olivedrab;
+        }
+        #result{
+            border: 1px solid orange;
+        }
+    </style>
+    <script>
+        const deleteTest=()=>{
+            const $delDiv=$("#item2").remove();
+            // const $delDiv=$("#item2").detach();
+            console.log($delDiv);
+            $delDiv.appendTo("div#result");
+            $("body").empty();
+            console.log($("body").empty());
+        };
+        $(()=>{
+            $("#item2").mouseenter(e=>{
+                $(e.target).css("backgroundColor","orange");
+            });
+        });
+    </script>
+    <div id="uploadcontainer">
+        <fieldset>
+            <legend>첨부파일</legend>
+            <table>
+                <tr>
+                    <td><input type="file" name="upload"></td>
+                    <td style="text-align: right;">
+                        <button onclick="addInput(event);">추가</button>
+                        <button onclick="delInput(event);">삭제</button>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+    <script>
+        function addInput(e){
+            const $input=$(e.target.parentElement.parentElement).clone(true);
+            $input.appendTo($("#uploadcontainer table"));
+        };
+        function delInput(e){
+            // $(e.target.parentElement.parentElement).remove();
+            $(e.target).parent().parent().remove();
+        }
+    </script>
+
+</body>
+</html>

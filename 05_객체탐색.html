@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>객체 탐색</title>
+    <script src="./js/jquery-3.7.0.min.js"></script>
+</head>
+<body>
+    <h2>순회 탐색</h2>
+    <ul>
+        <li>first() : 선택자로 선택된 element 중에서 0번 인덱스의 값 ->:first</li>
+        <li>last() : 선택자로 선택된 element 중에서 마지막 인덱스의 값 :last</li>
+        <li>eq() : 선택자로 선택된 element 중에서 매개변수 값과 동일한 위치에 있는 element</li>
+        <li>filter(function(index,value){return true||false}||선택자) : 선택자로 선택된 element 중에서 return값이 true인 element</li>
+        <li>not(선택자) : 매개변수 선택자를 제외한 element</li>
+    </ul>
+    <div id="container">
+        <h3 class="a">h3 1</h3>
+        <h3>h3 2</h3>
+        <h3 class="a">h3 3</h3>
+        <h3>h3 4</h3>
+        <h4>h4</h4>
+        <p>p 1</p>
+        <p class="a">p 2</p>
+        <p>p 3</p>
+        <p class="a">p 4</p>
+    </div>
+    <button onclick="firstTest();">First Test</button>
+    <button onclick="lastTest();">Last Test</button>
+    <button onclick="eqTest();">eq Test</button>
+    <button onclick="filterTest();">Filter Test</button>
+    <button onclick="notTest();">Not Test</button>
+    <script>
+        const notTest=()=>{
+            $("#container>*").not(".a,p").css("backgroundColor","lightgreen");
+        }
+        const firstTest=()=>{
+            console.log($("#container>*").first());
+            $("#container>*").first().css("fontSize","30px");
+        };
+        const lastTest=()=>{
+            console.log($("#container>*").last());
+            $("#container>*").last().css("fontSize","30px");
+        }
+        const eqTest=()=>{
+            console.log($("#container>*").eq(4));
+            $("#container>*").eq(4).css("fontSize","30px");
+        }
+        const filterTest=()=>{
+            // $("#container>*").filter("p, h4").css("backgroundColor","orange");
+            $("#container>*").filter((i,v)=>{
+                const text=$(v).text();
+                // return i%2==0;
+                return text.includes("2")||text.includes("4");
+            }).css("backgroundColor","lightblue");
+        }
+    </script>
+
+    <h3>자식 Element 검색</h3>
+    <p>
+        children() : 자식(직접연결된)을 가져오는 함수<br>
+        find("선택자") : 후손 중에서 매개변수와 일치하는 element를 가져오는 함수
+    </p>
+    <div id="childrenContainer">
+        <table>
+            <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td><button>버튼입니다</button></td>
+                <td><input type="text" name="test"></td>
+            </tr>
+        </table>
+        <button>외부 버튼입니다.</button>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQh2o29b7MlJMLk-wfwOQhKeepjieQXwjiUYA&usqp=CAU" 
+        height="100" width="100">
+    </div>
+    <button onclick="searchChildren();">Children Test</button>
+    <button onclick="searchfind();">Find Test</button>
+    <script>
+        const searchChildren=()=>{
+            const children=$("#childrenContainer").children();
+            console.log(children);
+            console.log($("#childrenContainer>table>tbody").children());
+            // $("#childrenContainer>table>tbody").children().each((i,v)=>{
+            //     const td=$(v).children();
+            //     console.log(td);
+            // });
+            console.log($("#childrenContainer>table>tbody").children().children());
+            $("#childrenContainer>table>tbody").children().first().css({
+                "backgroundColor":"olive",
+                "color":"white"
+            });
+            $("#childrenContainer>table>tbody").children().last().css({
+                "backgroundColor":"lightgreen",
+                "color":"white"
+            });
+        };
+        const searchfind=()=>{
+            const $find=$("#childrenContainer").find("tr");
+            console.log($find);
+            $find.css("backgroundColor","lightpink");
+            console.log($("#childrenContainer").find("button"));
+            const innerTag=$("#childrenContainer").find("td").children().each((i,v)=>{
+                switch($(v).prop("tagName")){
+                    case "BUTTON" : $(v).click(e=>alert("click!")); break;
+                    case "INPUT" : $(v).val("값을 입력한 것"); break;
+                }
+            });
+            console.log(innerTag);
+        };
+    </script>
+
+    <h3>부모 태그 찾기</h3>
+    <p>
+        1. parent() : 바로 위에 있는 부모 태그<br>
+        2. parents() : 모든 부모 태그들<br>
+        3. parentsUntil("선택자") : 특정 범위(자신~매개변수)의 부모 태그
+    </p>
+    <div id="parentcontainer">
+        <div>div태그 : div태그 부모
+            <div>div태그 : h1태그 부모
+                <h1>h1태그 : p태그 부모
+                    <p>p태그</p>
+                </h1>
+            </div>
+        </div>
+    </div>
+    <button onclick="parentTest();">부모 찾기</button>
+    <button onclick="parentsTest();">모든 부모 찾기</button>
+    <button onclick="parentsUtilTest();">특정 범위의 부모 찾기</button>
+    <script>
+        const parentTest=()=>{
+            console.log($("#parentcontainer p").parent());
+            console.log($("#parentcontainer p").parent().parent());
+        }
+        const parentsTest=()=>{
+            console.log($("#parentcontainer p").parents());
+            console.log($("#parentcontainer p").parents().filter("#parentcontainer"));
+            console.log($("#parentcontainer p").parents().filter("body").find(".container"));
+        }
+        const parentsUtilTest=()=>{
+            console.log($("#parentcontainer p").parentsUntil("div#parentcontainer"));
+        }
+    </script>
+
+    <h3>형제 Element 찾기</h3>
+    <p>
+        같은 레벨에 존재하는 Eelment를 찾는다.
+    </p>
+    <div id="brocontainer">
+        <h2>1</h2>
+        <h2>2</h2>
+        <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <span>span 1</span>
+        <span>span 2</span>
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ul>
+        <div>
+            <h2>div h2 1</h2>
+            <h2>div h2 2</h2>
+            <p>div p 1</p>
+            <span>div span 1</span>
+        </div>
+    </div>
+    <button onclick="siblingsTest();">형제 가져오기</button>
+    <button onclick="prevTest();">앞에 있는 element 가져오기</button>
+    <button onclick="prevAllTest();">앞에 있는 element 전체 가져오기</button>
+    <button onclick="prevUntilTest();">앞에 있는 element 일부 범위만 가져오기</button>
+    <button onclick="nextTest();">밑에 있는 element 가져오기</button>
+
+    <script>
+        const siblingsTest=()=>{
+            const bro=$("#brocontainer>ul").siblings(); //앞 선택자에 쓴 값은 제외하고 불러온다.
+            console.log(bro);
+        }
+        const prevTest=()=>{
+            const prevEl=$("#brocontainer>ul").prev().prev();
+            console.log(prevEl);
+            const prevEl2=$("#brocontainer p").prev();
+            console.log(prevEl2);
+        }
+        const prevAllTest=()=>{
+            const prevElAll=$("#brocontainer>ul").prevAll();
+            console.log(prevElAll);
+            prevElAll.filter((i,v)=>{
+                return v.tagName=="P"||v.tagName=="SPAN";
+            }).css({
+                "fontSize":"30px",
+                "color":"orange",
+                "display":(i,v)=>{
+                    if(v=='inline') return "block";
+                    return v;}
+            });
+        }
+        const prevUntilTest=()=>{
+            const untilEl=$("#brocontainer>ul").prevUntil("#brocontainer>h2:first");
+            console.log(untilEl);
+        }
+        const nextTest=()=>{
+            const test=$("#brocontainer>p:last").next().next();
+            console.log(test);
+            const test2=$("#brocontainer>p:last").nextAll();
+            console.log(test2);
+            const test3=$("#brocontainer>p:last").nextUntil("span");
+            console.log(test3);
+        }
+    </script>
+
+    
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>effect 활용</title>
+    <script src="./js/jquery-3.7.0.min.js"></script>
+</head>
+<body>
+    <h2>animate()함수 활용</h2>
+    <p>animation을 간단하게 적용할 수 있는 함수<br>
+        animate(적용할객체,적용할시간,[콜백함수])
+    </p>
+    <div id="target"></div>
+    <style>
+        #target{
+            width: 200px;
+            height: 200px;
+            background-color: yellowgreen;
+        }
+    </style>
+    <script>
+        $("#target").click(e=>{
+            $(e.target).animate({
+                "width":"500px",
+                "height":"500px",
+                "opacity":"0.5",
+            },1000,()=>{
+                alert("애니메이션 종료!");
+            });
+        });
+    </script>
+
+    <h2>슬라이딩 함수</h2>
+    <p>
+        slideUp(진행시간ms) : 해당 태그를 올려서 접어주는 것 ->display:none인 경우에 block으로 자동으로 변경한다
+        slideDown(진행시간ms) : 해당 태그를 열어서 펼쳐주는 것
+        slideToggle(진행시간ms) : 해당 태그가 접혀있으면 펼치고 펼쳐있는 경우 접어주는 것
+    </p>
+    <div id="menucontainer">
+        <div>첫번째 메뉴</div>
+    </div>
+    <button id="btn">slideUp</button>
+    <button id="btn2">slideDown</button>
+    <button id="btn3">slideToggle</button>
+    <style>
+        div#menucontainer>div{
+            height: 300px;
+            width: 40%;
+            background-color: lightblue;
+        }
+    </style>
+    <script>
+        $("#btn").click(e=>{
+            $("#menucontainer>div").slideUp(500);
+        });
+        $("#btn2").on("click",e=>{
+            $("#menucontainer").children().slideDown(1000);
+        });
+        $("#btn3").click(e=>{
+            $("#menucontainer>div").slideToggle(1000);
+        });
+    </script>
+
+    <h3>fade함수 적용</h3>
+    <p>
+        점점 희미해지거나 점점 진해지는 느낌을 주는 것
+        fadeIn(), fadeOut(), fadeTo(), fadeToggle()
+    </p>
+    <img src="https://i.namu.wiki/i/DEuyQ3Xld3oxPWfHqR9cSTRZdjs6gzG9jad4cmZjOP_6PFrWRhHM_Ehhy4EQbtrFFT3NXULkDe5Q0eGXNQh3Pg.webp" alt=""
+    height="200" width="200" id="testImg">
+    <br>
+    <button onclick="fadeInTest();">fadeIn test</button>
+    <button onclick="fadeOutTest();">fadeOut test</button>
+    <button onclick="fadeToTest();">fadeTo test</button>
+    <button onclick="fadeToggleTest();">fadeToggle test</button>
+    <br><br><br><br><br>
+    <style>
+        #testImg{
+            opacity: 0.3;
+        }
+    </style>
+    <script>
+        const fadeInTest=e=>{
+            $("#testImg").fadeIn(1000);
+        }
+        const fadeOutTest=e=>{
+            $("#testImg").fadeOut(1000);
+        }
+        const fadeToggleTest=e=>{
+            $("#testImg").fadeToggle(1000);
+        }
+        const fadeToTest=e=>{
+            $("#testImg").fadeTo(1000,0.3);
+        }
+
+        $("#testImg").hover(e=>{
+            $(e.target).fadeTo(1000,1);
+        },e=>{
+            $(e.target).fadeTo(1000,0.3);
+        });
+    </script>
+
+    <h3>show(), hide()</h3>
+    <p>
+        display 속성을 none, block으로 설정하는 함수
+    </p>
+    <h1 id="jqueryEnd">jquery 끝!!</h1>
+    <button onclick="showTest();">show</button>
+    <button onclick="hideTest();">hide</button>
+    <script>
+        // 시간을 설정해서 딜레이를 줄 수 있다. 사라지는 모습이 slide와 비슷하지만 기능 자체가 다름
+        const showTest=()=>{
+            $("#jqueryEnd").show(1000);
+        }
+        const hideTest=()=>{
+            $("#jqueryEnd").hide();
+        }
+    </script>
+
+    <br><br><br>
+    <div id="testMenu">
+        <div>첫번째 메뉴</div>
+        <p>첫번째 메뉴 내용</p>
+        <div>두번째 메뉴</div>
+        <p>두번째 메뉴 내용</p>
+        <div>세번째 메뉴</div>
+        <p>세번째 메뉴 내용</p>
+        <div>네번째 메뉴</div>
+        <p>네번째 메뉴 내용</p>
+    </div>
+
+    <style>
+        #testMenu>div{
+            font-size: 26px;
+            font-weight: bolder;
+        }
+        #testMenu>p{
+            display: none;
+            height: 40px;
+            background-color: lightcyan;
+            margin-left: 20px;
+        }
+    </style>
+    <script>
+        $("#testMenu>div").click(e=>{
+            if($(e.target).next().css("display")=="none"){
+                $("#testMenu>p").each((i,v)=>{
+                    if($(v).css("display")=="block") $(v).hide();
+                });
+                $(e.target).next().show();
+            }else{
+                $(e.target).next().hide();  
+            }
+        });
+
+    </script>
+
+</body>
+</html>

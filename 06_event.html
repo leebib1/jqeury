@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event 등록</title>
+    <script src="./js/jquery-3.7.0.min.js"></script>
+</head>
+<body>
+    <h2>jquery에서 이벤트 처리</h2>
+    <p>on함수를 이용해서 이벤트 등록</p>
+    <div id="eventTest">
+        <ul>
+            <li>html</li>
+            <li>css</li>
+            <li>javascript</li>
+            <li>jquery</li>
+        </ul>
+        <h3 class="eventTest">이벤트 설정하기</h3>
+        <button onclick="addEventTest();">동적 생성</button>
+    </div>
+    <script>
+        const addEventTest=()=>{
+            $("<h4>").text("동적으로 추가한 태그").addClass("eventTest").appendTo("#eventTest");
+        }
+        $(()=>{
+            //기본 이벤트 설정
+            $("#eventTest li").on("click",e=>{
+                $(e.target).text("event 실행됨");
+            });
+            //이벤트 설정 시 이벤트 객체에 데이터 저장
+            $("#eventTest li").on("mouseenter",{count:0},e=>{
+                console.log(e.data);
+                e.data.count+=1;
+            });
+            //다수의 이벤트 설정
+            $("#eventTest>h3").on({
+                "click":e=>{$(e.target).css("fontSize","30px")},
+                "dbclick":e=>{$(e.target).css("fontSize",(i,v)=>parseInt(v)+10+"px")},
+                "mouseenter":e=>{$(e.target).css("backgroundColor","lightpink")},
+                "mouseleave":e=>{$(e.target).css("backgroundColor","lightblue")}
+            });
+        });
+
+        $(document).on("click",".eventTest",e=>{
+            alert("동적 이벤트 설정");
+        });
+        // document.querySelectorAll(".eventTest").forEach(e=>{
+        //     e.addEventListener("click",event=>alert("이벤트 설정"));
+        // });
+    </script>
+    
+    <h2>한번만 실행하는 이벤트 설정</h2>
+    <button id="btn">한번만 클릭되는 버튼</button>
+    <script>
+        $("#btn").one("click",e=>{
+            alert("클릭함");
+        });
+    </script>
+
+    <h2>설정된 이벤트 삭제</h2>
+    <button id="btn2">이벤트 삭제</button>
+    <script>
+        $("#btn2").on("click",{count:0},e=>{
+            alert("5번만 실행되는 이벤트");
+            e.data.count+=1;
+            if(e.data.count==5){
+                $(e.target).off("click");
+            }
+        });
+    </script>
+
+    <h3>간편하게 이벤트 설정하기</h3>
+    <p>이벤트 속성별로 이벤트 등록 함수를 만들어놓아기 때문에 간편하게 설정할 수 있다.</p>
+    <div id="simpleEvent">
+        <form action="">
+            <input type="text" name="title" id="title"><br>
+            <select name="type" id="type">
+                <option value="공지">공지</option>
+                <option value="자유">자유</option>
+                <option value="secret">비밀</option>
+            </select><br>
+            <textarea name="content" id="content" cols="100" rows="10"></textarea>
+            <span></span>
+            <br>
+            <input type="password" id="password">
+        </form>
+    </div>
+    <script>
+        $(()=>{
+            $("#content").keyup(e=>{
+                // console.dir(e);
+                $("#simpleEvent span").text($(e.target).val().length+"/100")
+                // $("#simpleEvent span").text(e.target.textLength+"/100");
+                if(e.target.textLength>100){
+                    alert("100글자를 초과할 수 없습니다.");
+                    $(e.target).val($(e.target).val().substring(0,100));
+                };
+            });
+            $("#title").focus(e=>{
+                $(e.target).css({
+                    "backgroundColor":"lightpink",
+                    "color":"white"
+                });
+            }).blur(e=>{
+                $(e.target).css({
+                    "backgroundColor":"white",
+                    "color":"black"
+                });
+            })
+            $("#type").change(e=>{
+                alert($(e.target).val()+" 선택");
+            })
+        });
+    </script>
+
+    
+
+</body>
+</html>
